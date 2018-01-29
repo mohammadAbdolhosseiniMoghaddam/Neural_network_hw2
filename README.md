@@ -46,16 +46,16 @@ Initially, you will see output like:
 ============================= test session starts ==============================
 platform darwin -- Python 3.5.2, pytest-3.0.5, py-1.4.32, pluggy-0.4.0
 rootdir: /Users/bethard/Code/ista457/back-propagation, inifile: 
-collected 4 items 
+collected 5 items
 
-test_nn.py FFFF
+test_nn.py FFFFF
 
 =================================== FAILURES ===================================
 _________________________________ test_predict _________________________________
 
     def test_predict():
 ...
-=========================== 4 failed in 0.49 seconds ===========================
+=========================== 5 failed in 0.36 seconds ===========================
 ```
 This indicates that all tests are failing, which is expected since you have not
 yet written the code for any of the methods.

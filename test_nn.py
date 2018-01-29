@@ -116,7 +116,7 @@ def test_train_greater_than_half():
     outputs = (inputs > 0.5).astype(int)
 
     net = nn.SimpleNetwork.of(1, 10, 1)
-    net.train(inputs, outputs)
+    net.train(inputs, outputs, iterations=1000)
 
     test_inputs = np.array([[0.0], [0.1], [0.2], [0.3], [0.4],
                             [0.6], [0.7], [0.8], [0.9], [1.0]])
@@ -130,7 +130,21 @@ def test_train_xor():
     outputs = np.array([[0], [1], [1], [0]])
 
     net = nn.SimpleNetwork.of(2, 5, 1)
-    net.train(inputs, outputs, iterations=10000)
+    net.train(inputs, outputs, iterations=1000, learning_rate=0.5)
+
+    assert np.all(net.predict_zero_one(inputs) == outputs)
+
+
+def test_train_learning_rate():
+    inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    outputs = np.array([[0], [1], [1], [1]])
+
+    net = nn.SimpleNetwork.of(2, 5, 1)
+    net.train(inputs, outputs, iterations=100, learning_rate=0.01)
+
+    assert np.sometrue(net.predict_zero_one(inputs) != outputs)
+
+    net.train(inputs, outputs, iterations=100, learning_rate=1)
 
     assert np.all(net.predict_zero_one(inputs) == outputs)
 
