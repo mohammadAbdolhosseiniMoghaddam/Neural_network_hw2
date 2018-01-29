@@ -108,7 +108,7 @@ class SimpleNetwork:
     def train(self,
               input_matrix: np.ndarray,
               output_matrix: np.ndarray,
-              iterations: int = 1000,
+              iterations: int = 10,
               learning_rate: float = 0.1) -> None:
         """Trains the neural network on an input matrix and an expected output
         matrix.
