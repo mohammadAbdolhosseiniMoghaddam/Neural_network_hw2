@@ -41,7 +41,7 @@ class SimpleNetwork:
         units to output units
         """
 
-    def predict(self, input_matrix) -> np.ndarray:
+    def predict(self, input_matrix: np.ndarray) -> np.ndarray:
         """Performs forward propagation over the neural network starting with
         the given input matrix.
 
@@ -57,7 +57,7 @@ class SimpleNetwork:
         input matrix.
         """
 
-    def predict_zero_one(self, input_matrix) -> np.ndarray:
+    def predict_zero_one(self, input_matrix: np.ndarray) -> np.ndarray:
         """Performs forward propagation over the neural network starting with
         the given input matrix, and converts the outputs to binary (0 or 1).
 
@@ -69,24 +69,31 @@ class SimpleNetwork:
         matrix.
         """
 
-    def gradients(self, input_matrix, output_matrix) -> List[np.ndarray]:
+    def gradients(self,
+                  input_matrix: np.ndarray,
+                  output_matrix: np.ndarray) -> List[np.ndarray]:
         """Performs back-propagation to calculate the gradients for each of
         the weight matrices.
 
-        For a single input example (where we write each feature of the input as
-        o_{i, 0}), this method:
+        For a single input example (where we write the input vector as o_{0}),
+        this method:
         1. performs a pass of forward propagation through the network, keeping
-           track of the activations of each unit (a_{i,l} is the activation of
-           unit i in layer l) and the output of each unit (o_{i,l} is the output
-           of unit i in layer l).
+           track of the weighted sums (before the activation function) of each
+           unit (at layer l, we call such a vector z_{l}) and the activation
+           (after the activation function) of each unit (at layer l, we call
+           such a vector a_{l}).
         2. calculates the error of the final layer, using the output matrix
-           (where y_{i} is the ith element of the output) as
-           errors_{i,3} = o_{i,3} - y_{i}
-        3. updates the gradient for the hidden-to-output matrix as
-           gradient_{i,2} += errors_{i, 3} x a_{i,2}
-        4. calculates the error of the hidden layer as
-           errors_{1,2}
-
+           (where y is the expected output vector) as:
+               errors_{3} = a_{3} - y
+        3. calculates the error of the hidden layer using the hidden-to-output
+           matrix, W_{2}, and the sigmoid gradient, sigmoid'(z) =
+           sigmoid(z)(1 - sigmoid(z)) as:
+               errors_{2} = transpose(W_{2}) x errors_{3} * sigmoid'(z_{2})
+           where sigmoid' is the sigmoid gradient,
+        4. updates the gradients for both weight matrices as:
+               gradient_{l} += errors_{l+1} x a_{l,i}
+        When all input examples have applied their updates to the gradients,
+        the entire gradient should be divided by the number of input examples.
 
         :param input_matrix: The matrix of inputs to the network, where each
         row in the matrix represents an instance for which the neural network
@@ -99,8 +106,25 @@ class SimpleNetwork:
         """
 
     def train(self,
-              input_matrix,
-              output_matrix,
-              iterations=1000,
-              learning_rate=0.1):
-        pass
+              input_matrix: np.ndarray,
+              output_matrix: np.ndarray,
+              iterations: int = 1000,
+              learning_rate: float = 0.1) -> None:
+        """Trains the neural network on an input matrix and an expected output
+        matrix.
+
+        Training should repeatedly (`iterations` times) calculate the gradients,
+        and update the model by subtracting the learning rate times the
+        gradients from the model weight matrices.
+
+        :param input_matrix: The matrix of inputs to the network, where each
+        row in the matrix represents an instance for which the neural network
+        should make a prediction
+        :param output_matrix: A matrix of expected outputs, where each row is
+        the expected outputs - each either 0 or 1 - for the corresponding row in
+        the input matrix.
+        :param iterations: The number of gradient descent steps to take.
+        :param learning_rate: The size of gradient descent steps to take, a
+        number that the gradients should be multiplied by before updating the
+        model weights.
+        """
