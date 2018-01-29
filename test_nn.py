@@ -13,8 +13,9 @@ def test_predict():
                                      [.5, -.6]]),
                            np.array([[-.7, .8, -.9],
                                      [.10, -.11, .12]]))
-    predictions = net.predict(np.array([[13, -14, 15],
-                                        [-16, 17, -18]]))
+    input_matrix = np.array([[13, -14, 15],
+                             [-16, 17, -18]])
+    predictions = net.predict(input_matrix)
     [[h11, h12],
      [h21, h22]] = [[s(13 * .1 + -14 * -.3 + 15 * .5),
                      s(13 * -.2 + -14 * .4 + 15 * -.6)],
@@ -27,6 +28,10 @@ def test_predict():
          [s(h21 * -.7 + h22 * .10),
           s(h21 * .8 + h22 * -.11),
           s(h21 * -.9 + h22 * .12)]]))
+
+    binary_predictions = net.predict_zero_one(input_matrix)
+    npt.assert_array_equal(binary_predictions, np.array([[0, 1, 0],
+                                                         [1, 0, 1]]))
 
 
 def test_gradients():
